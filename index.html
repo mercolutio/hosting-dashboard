@@ -217,6 +217,25 @@
         .stat-card.orange .stat-value { color: #f39c12; }
         .stat-card.red .stat-value { color: #e74c3c; }
 
+        tr.cashflow-row td {
+            padding: 0.6rem 0.4rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            background: #16213e;
+            border-radius: 6px;
+            color: #2ecc71;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        tr.cashflow-row td.domain-name {
+            text-align: left;
+            color: #fff;
+        }
+
+        tr.cashflow-row td.cashflow-open { color: #f39c12; }
+        tr.cashflow-row td.cashflow-overdue { color: #e74c3c; }
+
         @media (max-width: 768px) {
             body { padding: 1rem; }
             h1 { font-size: 1.3rem; }
@@ -267,27 +286,27 @@ const data = {
         "Jan 26", "Feb 26", "Mär 26"
     ],
     domains: [
-        { name: "adgutachten.de",                  status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "ausbeultechnik-nord.de",           status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "benjamin-doll.de",                 status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "hausverwaltung-doll.de",           status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "heisenberg-solar.de",              status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "hes-solar.de",                     status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "immoinvest-doll.de",               status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "layrr.de",                         status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "lx-gutachter.de",                  status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "neocoach.io",                      status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "nord-sanierungen.de",              status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "pflegeinvest-rechner.de",          status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "pflegemarkt-news.de",              status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "repairstore38.de",                 status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "schloesser-umzuege.de",            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "seldan.de",                        status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "shk-cakal.de",                     status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "talentwerk38.de",                  status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "taxian.de",                        status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "velvetgreen-dienstleistungen.de",  status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
-        { name: "velvetgreen-immobilien.de",        status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] }
+        { name: "adgutachten.de",                  price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "ausbeultechnik-nord.de",           price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "benjamin-doll.de",                 price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "hausverwaltung-doll.de",           price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "heisenberg-solar.de",              price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "hes-solar.de",                     price:  5, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "immoinvest-doll.de",               price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "layrr.de",                         price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "lx-gutachter.de",                  price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "neocoach.io",                      price:  5, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "nord-sanierungen.de",              price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "pflegeinvest-rechner.de",          price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "pflegemarkt-news.de",              price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "repairstore38.de",                 price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "schloesser-umzuege.de",            price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "seldan.de",                        price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "shk-cakal.de",                     price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "talentwerk38.de",                  price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "taxian.de",                        price: 45, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "velvetgreen-dienstleistungen.de",  price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] },
+        { name: "velvetgreen-immobilien.de",        price: 15, status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"] }
     ]
 };
 
@@ -326,6 +345,39 @@ function render() {
         });
         html += "</tr>";
     });
+
+    // Cashflow-Summenzeile
+    html += `<tr class="cashflow-row"><td class="domain-name">Cashflow</td>`;
+    data.months.forEach((m, i) => {
+        let total = 0;
+        data.domains.forEach(d => {
+            if (d.status[i] === "paid") total += d.price;
+        });
+        html += `<td>${total} €</td>`;
+    });
+    html += "</tr>";
+
+    // Offene Beträge Zeile
+    html += `<tr class="cashflow-row"><td class="domain-name">Offen</td>`;
+    data.months.forEach((m, i) => {
+        let total = 0;
+        data.domains.forEach(d => {
+            if (d.status[i] === "open") total += d.price;
+        });
+        html += `<td class="cashflow-open">${total ? total + " €" : "—"}</td>`;
+    });
+    html += "</tr>";
+
+    // Überfällige Beträge Zeile
+    html += `<tr class="cashflow-row"><td class="domain-name">Überfällig</td>`;
+    data.months.forEach((m, i) => {
+        let total = 0;
+        data.domains.forEach(d => {
+            if (d.status[i] === "overdue") total += d.price;
+        });
+        html += `<td class="cashflow-overdue">${total ? total + " €" : "—"}</td>`;
+    });
+    html += "</tr>";
 
     html += "</tbody>";
     table.innerHTML = html;
