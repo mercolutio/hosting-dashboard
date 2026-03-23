@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hosting Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 4px;
+            margin: 0 auto;
+        }
+
+        th {
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #aaa;
+            background: #16213e;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        th.domain-header {
+            text-align: left;
+            min-width: 200px;
+        }
+
+        td {
+            text-align: center;
+            padding: 0;
+        }
+
+        td.domain-name {
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            background: #16213e;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .tile {
+            width: 56px;
+            height: 42px;
+            border-radius: 6px;
+            display: inline-block;
+            cursor: default;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            position: relative;
+        }
+
+        .tile:hover {
+            transform: scale(1.15);
+            z-index: 1;
+        }
+
+        .tile.paid {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .tile.paid:hover {
+            box-shadow: 0 4px 16px rgba(46, 204, 113, 0.5);
+        }
+
+        .tile.open {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+
+        .tile.open:hover {
+            box-shadow: 0 4px 16px rgba(243, 156, 18, 0.5);
+        }
+
+        .tile.overdue {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .tile.overdue:hover {
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.5);
+        }
+
+        .tile.none {
+            background: #16213e;
+            box-shadow: none;
+        }
+
+        /* Tooltip */
+        .tile-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f3460;
+            color: #fff;
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #0f3460 transparent transparent transparent;
+        }
+
+        .tile-wrapper:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Summary stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.2rem;
+        }
+
+        .stat-card.green .stat-value { color: #2ecc71; }
+        .stat-card.orange .stat-value { color: #f39c12; }
+        .stat-card.red .stat-value { color: #e74c3c; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            h1 { font-size: 1.3rem; }
+            .tile { width: 40px; height: 32px; }
+            th, td.domain-name { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Hosting Dashboard</h1>
+<p class="subtitle">Vertragsübersicht — Rechnungsstatus pro Monat</p>
+
+<div class="legend">
+    <div class="legend-item">
+        <div class="legend-color" style="background: linear-gradient(135deg, #2ecc71, #27ae60);"></div>
+        <span>Bezahlt</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color" style="background: linear-gradient(135deg, #f39c12, #e67e22);"></div>
+        <span>Rechnung offen</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+        <span>Rechnung überfällig</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color" style="background: #16213e; border: 1px solid #333;"></div>
+        <span>Kein Vertrag</span>
+    </div>
+</div>
+
+<div class="table-container">
+    <table id="dashboard"></table>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<script>
+// ============================================================
+// DATEN — Hier Domains und Status pflegen
+// Status: "paid" = bezahlt, "open" = offen, "overdue" = überfällig, "" = kein Vertrag
+// ============================================================
+const data = {
+    months: [
+        "Jan 25", "Feb 25", "Mär 25", "Apr 25", "Mai 25", "Jun 25",
+        "Jul 25", "Aug 25", "Sep 25", "Okt 25", "Nov 25", "Dez 25",
+        "Jan 26", "Feb 26", "Mär 26"
+    ],
+    domains: [
+        {
+            name: "beispiel-firma.de",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"]
+        },
+        {
+            name: "kunde-webshop.com",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","open","open"]
+        },
+        {
+            name: "praxis-mueller.de",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","overdue","overdue","overdue"]
+        },
+        {
+            name: "restaurant-bella.de",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","open"]
+        },
+        {
+            name: "autohaus-schmidt.com",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","open","overdue","overdue","overdue"]
+        },
+        {
+            name: "yoga-studio-zen.de",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid"]
+        },
+        {
+            name: "rechtsanwalt-weber.de",
+            status: ["","","","","","paid","paid","paid","paid","paid","paid","paid","paid","paid","open"]
+        },
+        {
+            name: "blumen-online24.de",
+            status: ["paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","paid","open",""]
+        }
+    ]
+};
+
+// ============================================================
+// Rendering
+// ============================================================
+const statusLabels = {
+    paid: "Bezahlt",
+    open: "Rechnung offen",
+    overdue: "Rechnung überfällig"
+};
+
+function render() {
+    const table = document.getElementById("dashboard");
+    let html = "<thead><tr><th class='domain-header'>Domain</th>";
+
+    data.months.forEach(m => {
+        html += `<th>${m}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    let countPaid = 0, countOpen = 0, countOverdue = 0;
+
+    data.domains.forEach(d => {
+        html += `<tr><td class="domain-name">${d.name}</td>`;
+        d.status.forEach((s, i) => {
+            const cls = s || "none";
+            const label = statusLabels[s] || "Kein Vertrag";
+            const tip = `${d.name} — ${data.months[i]}: ${label}`;
+
+            if (s === "paid") countPaid++;
+            else if (s === "open") countOpen++;
+            else if (s === "overdue") countOverdue++;
+
+            html += `<td><div class="tile-wrapper"><div class="tile ${cls}"></div><div class="tooltip">${tip}</div></div></td>`;
+        });
+        html += "</tr>";
+    });
+
+    html += "</tbody>";
+    table.innerHTML = html;
+
+    // Stats
+    const statsEl = document.getElementById("stats");
+    statsEl.innerHTML = `
+        <div class="stat-card green"><div class="stat-value">${countPaid}</div><div class="stat-label">Bezahlt</div></div>
+        <div class="stat-card orange"><div class="stat-value">${countOpen}</div><div class="stat-label">Offen</div></div>
+        <div class="stat-card red"><div class="stat-value">${countOverdue}</div><div class="stat-label">Überfällig</div></div>
+    `;
+}
+
+render();
+</script>
+
+</body>
+</html>
