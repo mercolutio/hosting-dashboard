@@ -107,6 +107,10 @@
             position: relative;
         }
 
+        .tile {
+            cursor: pointer;
+        }
+
         .tile:hover {
             transform: scale(1.15);
             z-index: 1;
@@ -319,6 +323,36 @@ const statusLabels = {
     overdue: "Rechnung überfällig"
 };
 
+const statusCycle = ["paid", "open", "overdue"];
+
+// Daten aus localStorage laden (falls vorhanden)
+function loadData() {
+    const saved = localStorage.getItem("hostingDashboard");
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        parsed.forEach(s => {
+            const domain = data.domains.find(d => d.name === s.name);
+            if (domain) domain.status = s.status;
+        });
+    }
+}
+
+function saveData() {
+    const toSave = data.domains.map(d => ({ name: d.name, status: d.status }));
+    localStorage.setItem("hostingDashboard", JSON.stringify(toSave));
+}
+
+function toggleStatus(domainIdx, monthIdx) {
+    const current = data.domains[domainIdx].status[monthIdx];
+    const currentIdx = statusCycle.indexOf(current);
+    const next = statusCycle[(currentIdx + 1) % statusCycle.length];
+    data.domains[domainIdx].status[monthIdx] = next;
+    saveData();
+    render();
+}
+
+loadData();
+
 function render() {
     const table = document.getElementById("dashboard");
     let html = "<thead><tr><th class='domain-header'>Domain</th>";
@@ -330,7 +364,7 @@ function render() {
 
     let countPaid = 0, countOpen = 0, countOverdue = 0;
 
-    data.domains.forEach(d => {
+    data.domains.forEach((d, di) => {
         html += `<tr><td class="domain-name">${d.name}</td>`;
         d.status.forEach((s, i) => {
             const cls = s || "none";
@@ -341,7 +375,7 @@ function render() {
             else if (s === "open") countOpen++;
             else if (s === "overdue") countOverdue++;
 
-            html += `<td><div class="tile-wrapper"><div class="tile ${cls}"></div><div class="tooltip">${tip}</div></div></td>`;
+            html += `<td><div class="tile-wrapper"><div class="tile ${cls}" onclick="toggleStatus(${di},${i})"></div><div class="tooltip">${tip}</div></div></td>`;
         });
         html += "</tr>";
     });
